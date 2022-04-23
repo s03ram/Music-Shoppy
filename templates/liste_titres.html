@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+
+<!---->
+
+{% block contenu %}
+<script>
+    valeur = 0
+
+    function calc(idCheckbox) {
+        checkbox = document.getElementById(idCheckbox)
+        if (checkbox.checked) {
+            valeur += parseFloat(checkbox.value)
+            valeur = Math.round(valeur * 100) / 100;
+            document.getElementById("prixTotal").innerHTML = '<b>Prix du panier : ' + valeur + '</b>';
+        } else {
+            valeur -= parseFloat(checkbox.value)
+            valeur = Math.round(valeur * 100) / 100;
+            document.getElementById("prixTotal").innerHTML = '<b>Prix du panier : ' + valeur + '</b>';
+        }
+    }
+</script>
+
+<style>
+    .text-small {
+        font-size: 0.9rem !important;
+    }
+    
+    .cursor-pointer {
+        cursor: pointer;
+    }
+</style>
+
+<h1 class="text-center py-5" style="color: aliceblue;">{{ album['title'] }}</h1>
+
+<section>
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-7 mx-auto">
+                <div class="card shadow border-0 mb-5">
+                    <div class="card-body p-5">
+                        <form action="{{ url_for('recap_commande') }}" method="post">
+                            <ul class="list-group">
+                                {% for titre in titres %}
+                                <li class="list-group-item rounded-0">
+                                    <div class="py-2 custom-control custom-checkbox">
+                                        <input class="custom-control-input d-inline checked:width+5%" type="checkbox" name="{{ titre['Name'] }}" value="{{ titre['UnitPrice'] }}" id="{{ titre['TrackId'] }}" onclick="calc(this.id);">
+                                        <label class="cursor-pointer d-inline custom-control-label" for="{{ titre['TrackId'] }}"><strong>{{ titre["Name"] }}</strong></label>
+                                        <p class="pull-right d-inline">{{ titre['UnitPrice'] }}USD</p>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <input type="submit" value="Acheter">
+                        </form>
+                    </div>
+                    <p id="prixTotal"></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+<!---->
+
+{% block footer %} {% endblock %}

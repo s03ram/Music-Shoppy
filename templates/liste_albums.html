@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+
+<!---->
+
+{% block head %}
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='./css/albums.css') }}">
+</head>
+{% endblock %}
+
+<!---->
+
+{% block contenu %}
+<h1 class="text-center py-5" style="color: aliceblue;">Albums de {{ artist['name'] }}</h1>
+
+<div class="container mt-3">
+    <ul class="list-group">
+        {% for i in range (0,albums|length) %}
+        <li class="list-group-item  mx-2 my-1">
+            <img class="img-responsive rounded-circle d-inline" style="width:50px;" src="{{ url_for('static', filename='./images/cd-icon.png') }}" alt="" />
+            <a href="liste_titres?AlbumId={{albums[i]['AlbumId']}}" style="text-decoration: none;">
+                <h3 class="list-group-item-heading d-inline my-3" style="width: fit-content; color: #001d53;"><strong>{{ albums[i]["Title"] }}</strong></h3>
+            </a>
+            <div class="btn-toolbar pull-right d-inline" role="toolbar" aria-label="">
+                <a href="liste_titres?AlbumId={{albums[i]['AlbumId']}}" class="btn btn-default">Consulter les titres</a>
+                <a href="#" class="btn btn-dark">Prix total : {{ prix_albums[i][1] }} €</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %} {% block footer %} {% endblock %}

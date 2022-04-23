@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+<!---->
+
+{% block head %}
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='./css/contact.css') }}">
+    <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js') }}"></script>
+</head>
+{% endblock %}
+
+<!---->
+
+{% block contenu %}
+<div class="wrapper rounded d-flex align-items-stretch">
+    <div class="bg-yellow">
+        <div class="text-white"> <span class="far"> <img src="{{ url_for('static', filename='/images/icon/envelope-solid.svg') }}" > </span> </div>
+        <div class="pt-5 cursive"> En quel honneur ? </div>
+        <div class="pt-sm-5 pt-5 cursive mt-sm-5"> Nous n'utiliserons pas votre email à des fins commerciales </div>
+    </div>
+    <div class="contact-form">
+        <div class="h3">Contactez-nous</div>
+        <form action="{{ url_for('envoi_email') }}" method="POST">
+            <div class="form-group pt-3"> <label for="message">Message</label> <textarea name="message" class="form-control" required></textarea> </div>
+            <div class="d-flex align-items-center flex-wrap justify-content-between pt-4">
+                <div class=" form-group pt-lg-2 pt-3 "> <label for="email">Votre email</label> <input type="email" name="email" class="form-control " required placeholder="nom@exemple.fr "> </div>
+                <div class="form-group pt-lg-2 pt-3"> <label for="name">Nom complet</label> <input type="name" name="name" class="form-control" required placeholder="Claude Martin"> </div>
+            </div>
+            <div class="d-flex align-items-center flex-wrap justify-content-between pt-lg-5 mt-lg-4 mt-5 ">
+                <div class="btn btn-default "> Accueil </div>
+                <button type="submit" class="btn btn-primary " data-bs-toggle="modal " data-bs-target="#myModal "> Envoyer </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
