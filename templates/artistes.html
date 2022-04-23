@@ -1,22 +1,22 @@
 <!--card layout : https://codepen.io/bekirhanbayar/pen/pxbqmm -->
+
 <!--add search form : https://www.blog.pythonlibrary.org/2017/12/13/flask-101-how-to-add-a-search-form/ -->
+
 {% extends 'layout.html' %}
 
-<head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='./css/artistes.css') }}">
-</head>
-
+<!---->
 
 {% block contenu %}
+
 <section class="container mt-5">
     <div class="row">
         {% for artiste in artistes %}
         <div class="col-md-4">
-            <div class="card m-2" style="width:100%;">
+            <div class="card m-5" style="width:70%;">
                 <a href="/liste_albums?ArtistId={{artiste['ArtistId']}}">
-                    <img class="card-img-top" style="background-color:gray;" src="https://picsum.photos/200/200/?random={{loop.index%1}}" alt="Card image cap">
+                    <img class="card-img-top" style="background-color:gray;" src="https://picsum.photos/200/200/?random={{loop.index%7}}" alt="Card image cap">
                     <div class="card-body">
-                        <p class="card-text" style="text-decoration: none;">{{artiste["Name"]}}</p>
+                        <p style="text-decoration: none;">{{artiste["Name"]}}</p>
                     </div>
                 </a>
             </div>

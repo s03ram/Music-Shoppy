@@ -1,0 +1,252 @@
+/************************ Général ************************/
+
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,300italic);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background-image: url("../images/background-index.jpg");
+    background-size: 120%;
+    background-position: top center;
+    background-repeat: repeat-y;
+    background-attachment: fixed;
+    background-color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+h1 {
+    font-size: 52px;
+}
+
+h2 {
+    font-size: 38px;
+    font-weight: 200;
+}
+
+h3 {
+    font-size: 25px;
+}
+
+h4 {
+    font-size: 20px;
+}
+
+p {
+    font-size: 15px;
+}
+
+ul {
+    padding-left: 0;
+}
+
+ul li {
+    list-style: none;
+}
+
+.clear {
+    clear: both;
+}
+
+
+/************************ Bienvenue ************************/
+
+.p-welcome {
+    min-height: 200px;
+}
+
+.welcome {
+    width: 100%;
+}
+
+.p-welcome {
+    width: 100%;
+    padding-top: 4em;
+    padding-bottom: 6em;
+}
+
+.logo-welcome {
+    width: 60%;
+    min-width: 350px;
+    display: block;
+    margin: auto;
+    -webkit-transition: .2s all;
+    -o-transition: .2s all;
+    transition: .2s all;
+}
+
+.p-welcome h1 {
+    text-align: center;
+    color: rgb(231, 231, 231);
+}
+
+.p-welcome h2 {
+    width: fit-content;
+    display: block;
+    margin: auto;
+    padding: 0 20px;
+    color: rgb(231, 231, 231);
+    background-color: rgb(20, 20, 20, 0.7);
+    border-radius: 10px;
+}
+
+
+/************************ Services ************************/
+
+#highlighted .title {
+    padding: 30px 0;
+    background-color: #f3f3f3;
+    border-radius: 10px;
+}
+
+#highlighted .arrow-down {
+    width: 5%;
+}
+
+
+/************************ Services ************************/
+
+#services {
+    margin: 30px 0;
+    background-color: #f3f3f3;
+}
+
+#services .container-fw {
+    background-color: #f3f3f3;
+    width: 70%;
+    padding: 3em 0;
+}
+
+#services .title {
+    font-weight: 300;
+    text-align: center;
+}
+
+#services .service-wrapper {
+    padding: 80px 0;
+}
+
+#services .block {
+    cursor: pointer;
+    text-align: center;
+}
+
+#services .block:hover .icon i {
+    color: #fff;
+}
+
+#services .block:hover h3 {
+    color: #001d53;
+}
+
+#services .block:hover .icon {
+    border: 1px solid #FFFFFF;
+    background: #001d53;
+    color: #fff;
+    -webkit-box-shadow: 0 0 0px 2px #001d53;
+    -moz-box-shadow: 0 0 0px 2px #001d53;
+    box-shadow: 0 0 0px 2px #001d53;
+}
+
+#services .block .icon {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto;
+    border-radius: 100%;
+    border: 1px solid #dedede;
+    text-align: center;
+    -webkit-transition: .2s all;
+    -o-transition: .2s all;
+    transition: .2s all;
+}
+
+#services .block i {
+    font-size: 25px;
+    line-height: 90px;
+    color: #989898;
+    -webkit-transition: .2s all;
+    -o-transition: .2s all;
+    transition: .2s all;
+}
+
+#services .block h3 {
+    color: #555;
+    font-weight: 300;
+}
+
+#services .block p {
+    color: #666;
+}
+
+a {
+    color: #001d53;
+}
+
+a:hover {
+    color: #001d53;
+}
+
+
+/************************ Témoignages ************************/
+
+#testimonials {
+    background-color: #ffffff00;
+    padding: 5em 0;
+}
+
+#testimonials .container-fw {
+    background-color: #f3f3f3;
+    width: 100%;
+    padding: 2em 0;
+}
+
+#testimonials .title {
+    font-weight: 300;
+    text-align: center;
+}
+
+#testimonials .col p {
+    display: block;
+    margin: auto;
+    width: 50%;
+    text-align: justify;
+}
+
+#testimonials .row {
+    width: 100%;
+}
+
+
+/************************ Pied de page ************************/
+
+footer {
+    width: 100%;
+    background: #f9f9f9;
+    border-top: 1px solid #e8e8e8;
+    padding: 40px 0 20px;
+    margin-top: 40px;
+    margin-top: auto;
+}
+
+footer .footer-logo {
+    margin-bottom: 15px;
+    display: inline-block;
+    text-align: center;
+}
+
+footer p {
+    color: #6F6F6F;
+    margin-top: 10px;
+    margin-bottom: 0;
+}

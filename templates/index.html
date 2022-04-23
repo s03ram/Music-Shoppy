@@ -3,7 +3,7 @@
 <!---->
 
 {% block contenu %}
-<section id="welcome">
+<section id="welcome" class="">
     <div class="container">
         <div class="p-welcome">
             <img class="logo-welcome block wow fadeIn" data-wow-delay=".1s" src="{{ url_for('static', filename='/images/logo-white.svg') }}">
@@ -13,10 +13,33 @@
     </div>
 </section>
 
-
-<section id="services">
+<section id="highlighted" class="py-4 my-5">
     <div class="container">
-        <h1 class="title">Nos services</h1>
+        <div class="title d-flex justify-content-center">
+            <img class='arrow-down' src="{{ url_for('static', filename='images/icon/arrow-down.svg') }}">
+            <h1 class=" text-center">Artistes à découvrir</h1>
+            <img class='arrow-down' src="{{ url_for('static', filename='images/icon/arrow-down.svg') }}">
+        </div>
+        <div class="row">
+            {% for artiste in artistes %}
+            <div class="col-md-4">
+                <div class="card m-5" style="width:70%;">
+                    <a href="/liste_albums?ArtistId={{artiste['ArtistId']}}">
+                        <img class="card-img-top" style="background-color:gray;" src="https://picsum.photos/200/200/?random={{loop.index%7}}" alt="Card image cap">
+                        <div class="card-body">
+                            <p>{{artiste["Name"]}}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section id="services" class="d-flex justify-content-center">
+    <div class="container-fw">
+        <h1 class="title text-center">Nos services</h1>
         <hr class="divider" style="width:50%; border-color:#CCC; display: block; margin: 2em auto;">
         <div class="service-wrapper">
             <div class="row">
@@ -27,7 +50,7 @@
                         </div>
 
                         <h3>Instantané</h3>
-                        <p>Recevez vos produits dans les plus bref délais</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, amet.</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
@@ -35,8 +58,8 @@
                         <div class="icon">
                             <i class="fa fa-list"></i>
                         </div>
-                        <h3>3500+ Produits</h3>
-                        <p>Tous les styles de musiques en un seul site.</p>
+                        <h3>3500+ titres</h3>
+                        <p>La bibliothèque musicale de Music Shoppy a un catalogue très large des musiques pop.</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
@@ -45,7 +68,7 @@
                             <i class="fa fa-shopping-cart"></i>
                         </div>
                         <h3>Achat en ligne</h3>
-                        <p>Payement sécurisé et sans frais supplémentaire.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, amet.</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
@@ -56,7 +79,7 @@
                             </svg>
                         </div>
                         <h3>Cryptomonnaies acceptées</h3>
-                        <p>Car nous préviligions la sécurité de vos transactions nous acceptons aussi les crytomonnaies.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, amet.</p>
                     </div>
                 </div>
             </div>
@@ -66,15 +89,17 @@
 
 <section id="testimonials">
     <div class="container-fw">
+        <h1 class="title text-center">Témoignages</h1>
+        <hr class="divider" style="width:50%; border-color:#CCC; display: block; margin: 2em auto;">
         <div class="row">
             <div class="col">
                 <div class="block text-center">
                     <img class="img-responsive rounded-circle center-block" src="{{ url_for('static', filename='/images/testimonials/1.jpg') }}" alt="" style="height:100px;">
                 </div>
                 <div class="block">
-                    <h3 style="color:#001d53;" class="text-center font-weight-bold">Rapide et génial - Nicolas Reveret</h3>
+                    <h3 style="color:#001d53;" class="text-center font-weight-bold">Absolutely Brilliant - Julia Doe</h3>
                     <p style="color:#111;font-size:14px;">
-                        Je n'est jamais vu un site aussi efficace et peu cher comme celui, je le recommande vivement !
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea com Neque porro quisqua lorem.
                     </p>
                 </div>
             </div>
@@ -83,9 +108,10 @@
                     <img class="img-responsive rounded-circle center-block" src="{{ url_for('static', filename='/images/testimonials/1.jpg') }}" alt="" style="height:100px;">
                 </div>
                 <div class="block">
-                    <h3 style="color:#001d53;" class="text-center font-weight-bold">Service incroyable! - Vianney de villers</h3>
+                    <h3 style="color:#001d53;" class="text-center font-weight-bold">Amazing Service! - John Doe</h3>
                     <p style="color:#111;font-size:14px;">
-                       J'ai acheter un album sans le vouloir nommé la tribu des villageois du groupe Agua, après avoir contacté le service après vente du site j'ai pu me le faire échangé contre un autre en très peu de temps.
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea com Neque porro quisqua lorem ipsum dolor
+                        sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.
                     </p>
                 </div>
             </div>
@@ -93,3 +119,5 @@
     </div>
 </section>
 {% endblock %}
+
+</html>

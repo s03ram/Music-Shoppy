@@ -1,13 +1,14 @@
 from crypt import methods
 from multiprocessing import AuthenticationError
-from flask import Flask, appcontext_pushed, render_template, request, g
+from flask import Flask, render_template, request, g, session
 import sqlite3
 from datetime import datetime
 from config import Config
 from flask_mail import Mail, Message
+from random import randint
 
 app = Flask("Mon application")
-
+app.secret_key = "azerty" #on verra plus tard pour la sécurité
 
 
 
@@ -69,12 +70,31 @@ def selection(requete, args=(), one=False):
 @app.route('/')
 @app.route('/accueil')
 def accueil():
-    return render_template('index.html')
+    requete_nbArtists = 'SELECT count(*) FROM artists'
+    requete_artistById = """
+    SELECT * FROM artists
+    WHERE artists.ArtistId = ?
+    """
+    nbArtistes = selection(requete_nbArtists, one=True)[0]
+    artistes = []
+    for i in range (6):
+        artistes.append(selection(requete_artistById, (randint(1,nbArtistes),), one=True))
+    print(artistes[0]['Name'])
+    if 'panier' not in session :
+            session['panier'] = []
+            session['panierPrice'] = 0
+
+    return render_template('index.html', artistes = artistes)
 
 
 #contact
 @app.route('/contact')
 def contact():
+    
+    if 'panier' not in session :
+            session['panier'] = []
+            session['panierPrice'] = 0
+ 
     return render_template('contact.html')
 
 
@@ -86,6 +106,11 @@ def liste_artistes():
     ORDER BY artists.name ASC
     """
     artistes = selection(requete)
+    
+    if 'panier' not in session :
+            session['panier'] = []
+            session['panierPrice'] = 0
+ 
     return render_template("artistes.html", artistes=artistes)
 
 
@@ -93,42 +118,25 @@ def liste_artistes():
 @app.route("/liste_albums")
 def liste_albums():
     # à améliorer -> simplifiable niveau requêtes
-    idArtist = request.args.get('ArtistId')
+    artiste = request.args.get('ArtistId')
     requete_listAlbums = """
     SELECT * FROM albums
     WHERE albums.ArtistId = ?
     """
-    albums = selection(requete_listAlbums, (idArtist,))
     requete_artist = """
     SELECT * FROM artists
     WHERE artists.ArtistId = ?
     """
-    artist = selection(requete_artist, (idArtist,), one=True)
-    requete_UnitPrice = """
-    SELECT tracks.AlbumId, tracks.UnitPrice FROM tracks
-    INNER JOIN albums ON tracks.AlbumId = albums.AlbumId
-    INNER JOIN artists ON albums.ArtistId = artists.ArtistId
-    WHERE artists.ArtistId = ?
-    """
-    unitPrice = selection(requete_UnitPrice, (idArtist,))
-    prix_albums = []
-    no_album = 1
-    current_album = unitPrice[0][0]
-    sum_prix = 0
-    for i in range(len(unitPrice)-1):
-        if unitPrice[i][0] == current_album:
-            sum_prix += unitPrice[i][1]
-        else:
-            prix_albums.append((no_album, round(sum_prix,2)))
-            current_album = unitPrice[i][0]
-            sum_prix = 0
-            no_album += 1
-    prix_albums.append((no_album, sum_prix))
+    albums = selection(requete_listAlbums, (artiste,))
+    artist = selection(requete_artist, (artiste,), one=True)
+
+    if 'panier' not in session :
+            session['panier'] = []
+            session['panierPrice'] = 0
+
     return render_template("liste_albums.html",
                            artist=artist,
-                           albums=albums,
-                           prix_albums=prix_albums
-                           )
+                           albums=albums,)
 
 
 # liste des titres de l'album sélectionné
@@ -139,33 +147,53 @@ def liste_titres():
     SELECT Title FROM albums
     WHERE albums.AlbumId = ?
     """
-    album = selection(requete_album, (idAlbum,), one=True)
     requete_listTitles = """
     SELECT * FROM tracks
     WHERE tracks.AlbumId = ?
     """
+    album = selection(requete_album, (idAlbum,), one=True)
     titres = selection(requete_listTitles, (idAlbum,))
+
+    if 'panier' not in session :
+            session['panier'] = []
+            session['panierPrice'] = 0
+
     return render_template("liste_titres.html",
                             album = album,
                             titres = titres)
 
 
-# récapitulatif de commande
-@app.route('/commande', methods = ['post'])
-def recap_commande():
-    titres = request.form
-    print(titres)
-    requete_track = """
-    SELECT Name, unitPrice FROM tracks
-    WHERE tracks.trackId = ?
-    """
-    return render_template("commande.html")
+# récapitulatif de panier
+@app.route('/panier', methods = ['post','get'])
+def panier():
+    try:
+        tracks = request.form
+    except :
+        if 'panier' not in session :
+            session['panier'] = []
+            session['panierPrice'] = 0
+    else:
+        noms = [nom for nom in tracks]
+        prix = [float(tracks[n]) for n in noms]
+        session['panierPrice'] += float(sum(prix))
+        round(session['panierPrice'],2)
+        for nom, prixUnit in zip(noms, prix):
+            session['panier'].append((nom, prixUnit))
 
+    
+    return render_template("panier.html")
+
+#suppression du panier
+@app.route('/vider_panier')
+def vider_panier():
+    session['panier'] = []
+    session['panierPrice'] = 0
+    return render_template("panier.html")
 
 # page de redirection vers une page "sécurisée"
-@app.route('/achat', methods = ['post'])
-def achat():
-    return render_template("achat.html")
+@app.route('/paiement', methods = ['post'])
+def paiement():
+    return render_template("paiement.html")
 
 
 ### envoi d'un mail par le formulaire à mon adresse perso ###

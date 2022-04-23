@@ -4,18 +4,21 @@
 
 {% block contenu %}
 <script>
-    valeur = 0
+    function ParseFloat2(value) {
+        value = value.toString();
+        value = value.slice(0, (value.indexOf(".")) + 3);
+        return Number(value);
+    }
+    prixTot = 0
 
-    function calc(idCheckbox) {
+    function calculate_price(idCheckbox) {
         checkbox = document.getElementById(idCheckbox)
         if (checkbox.checked) {
-            valeur += parseFloat(checkbox.value)
-            valeur = Math.round(valeur * 100) / 100;
-            document.getElementById("prixTotal").innerHTML = '<b>Prix du panier : ' + valeur + '</b>';
+            prixTot += parseFloat(checkbox.value)
+            document.getElementById("prixTotal").innerHTML = ParseFloat2(prixTot) + " USD";
         } else {
-            valeur -= parseFloat(checkbox.value)
-            valeur = Math.round(valeur * 100) / 100;
-            document.getElementById("prixTotal").innerHTML = '<b>Prix du panier : ' + valeur + '</b>';
+            prixTot -= parseFloat(checkbox.value)
+            document.getElementById("prixTotal").innerHTML = ParseFloat2(prixTot) + " USD";
         }
     }
 </script>
@@ -35,26 +38,33 @@
 <section>
     <div class="container">
         <div class="row">
-
             <div class="col-lg-7 mx-auto">
                 <div class="card shadow border-0 mb-5">
-                    <div class="card-body p-5">
-                        <form action="{{ url_for('recap_commande') }}" method="post">
+                    <div class="card-body p-5 ">
+                        <form action="{{ url_for('panier') }}" method="post">
                             <ul class="list-group">
                                 {% for titre in titres %}
                                 <li class="list-group-item rounded-0">
                                     <div class="py-2 custom-control custom-checkbox">
-                                        <input class="custom-control-input d-inline checked:width+5%" type="checkbox" name="{{ titre['Name'] }}" value="{{ titre['UnitPrice'] }}" id="{{ titre['TrackId'] }}" onclick="calc(this.id);">
+                                        <input class="custom-control-input d-inline" type="checkbox" name="{{ titre['Name'] }}" value="{{ titre['UnitPrice'] }}" id="{{ titre['TrackId'] }}" onclick="calculate_price(this.id);">
                                         <label class="cursor-pointer d-inline custom-control-label" for="{{ titre['TrackId'] }}"><strong>{{ titre["Name"] }}</strong></label>
                                         <p class="pull-right d-inline">{{ titre['UnitPrice'] }}USD</p>
                                     </div>
                                 </li>
                                 {% endfor %}
                             </ul>
-                            <input type="submit" value="Acheter">
+                            <div class="d-flex justify-content-between align-items-center mt-2" style="height:50px;">
+                                <div class="d-flex flex-row">
+                                    <p style="color:black; font-size:large;">Prix total : &ensp;</p>
+                                    <p class="pr-1" style="color:black; font-size:large;" id="prixTotal">0 USD</p>
+                                </div>
+                                <input class="btn btn-outline-dark btn-rounded " type="submit" value="Ajouter au panier">
+
+                            </div>
                         </form>
+
                     </div>
-                    <p id="prixTotal"></p>
+
                 </div>
             </div>
 
