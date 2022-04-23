@@ -1,6 +1,6 @@
 # Music-Shoppy
-School projet using DB, Flask and Jinja
-Not secured but fun using of Python and SQLite
+School projet using DB, Flask and Jinja.<br>
+Not secured but fun using of Python and SQLite.
 
 ### Contact section
 File config.py not commited because it contains personal info.
