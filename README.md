@@ -1,5 +1,6 @@
 # Music-Shoppy
 School projet using DB, Flask and Jinja
+Not secured but fun using of Python and SQLite
 
 ### Contact section
 File config.py not commited because it contains personal info.
@@ -25,4 +26,4 @@ If you want to try at home create this file with that code in :
         MAIL_MAX_EMAILS =  None
         MAIL_ASCII_ATTACHMENTS = False
 
-[Your app password tutorial for gmail.](https://support.google.com/mail/answer/185833?hl=en)
+[Your app password tutorial for gmail.](https://support.google.com/mail/answer/185833?hl=en) (you need a 2-step verification account)
