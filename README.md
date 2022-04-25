@@ -6,6 +6,7 @@ Not secured but fun use of Python and SQLite.
 File config.py not commited because it contains personal info.
 If you want to try at home create this file with that code in :
 
+You ave to install Flask and Flask_mail library.
 
     class Config :
     
