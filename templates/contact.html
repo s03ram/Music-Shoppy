@@ -23,13 +23,16 @@
     <div class="contact-form">
         <div class="h3">Contactez-nous</div>
         <form action="{{ url_for('envoi_email') }}" method="POST">
-            <div class="form-group pt-3"> <label for="message">Message</label> <textarea name="message" class="form-control" required></textarea> </div>
+            <div class="form-group pt-3">
+                <label for="message">Message</label>
+                <textarea name="message" class="form-control" required></textarea>
+            </div>
             <div class="d-flex align-items-center flex-wrap justify-content-between pt-4">
                 <div class=" form-group pt-lg-2 pt-3 "> <label for="email">Votre email</label> <input type="email" name="email" class="form-control " required placeholder="nom@exemple.fr "> </div>
                 <div class="form-group pt-lg-2 pt-3"> <label for="name">Nom complet</label> <input type="name" name="name" class="form-control" required placeholder="Claude Martin"> </div>
             </div>
             <div class="d-flex align-items-center flex-wrap justify-content-between pt-lg-5 mt-lg-4 mt-5 ">
-                <div class="btn btn-default "> Accueil </div>
+                <a href="/" class="btn btn-default "> Accueil </a>
                 <button type="submit" class="btn btn-primary " data-bs-toggle="modal " data-bs-target="#myModal "> Envoyer </button>
             </div>
         </form>

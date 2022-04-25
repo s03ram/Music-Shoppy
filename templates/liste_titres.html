@@ -33,7 +33,7 @@
     }
 </style>
 
-<h1 class="text-center py-5" style="color: aliceblue;">{{ album['title'] }}</h1>
+<h1 class="text-center py-5" style="color: aliceblue;">{{ title }}</h1>
 
 <section>
     <div class="container">
@@ -47,7 +47,7 @@
                                 <li class="list-group-item rounded-0">
                                     <div class="py-2 custom-control custom-checkbox">
                                         <input class="custom-control-input d-inline" type="checkbox" name="{{ titre['Name'] }}" value="{{ titre['UnitPrice'] }}" id="{{ titre['TrackId'] }}" onclick="calculate_price(this.id);">
-                                        <label class="cursor-pointer d-inline custom-control-label" for="{{ titre['TrackId'] }}"><strong>{{ titre["Name"] }}</strong></label>
+                                        <label class="cursor-pointer d-inline custom-control-label" for="{{ titre['TrackId'] }}"><strong>{{ titre['Name'] }}</strong></label>
                                         <p class="pull-right d-inline">{{ titre['UnitPrice'] }}USD</p>
                                     </div>
                                 </li>
@@ -58,7 +58,7 @@
                                     <p style="color:black; font-size:large;">Prix total : &ensp;</p>
                                     <p class="pr-1" style="color:black; font-size:large;" id="prixTotal">0 USD</p>
                                 </div>
-                                <input class="btn btn-outline-dark btn-rounded " type="submit" value="Ajouter au panier">
+                                <input class="btn btn-dark btn-rounded " type="submit" value="Ajouter au panier">
 
                             </div>
                         </form>

@@ -9,14 +9,15 @@
 {% block contenu %}
 
 <section class="container mt-5">
+    <h1 class="text-center py-5" style="color: aliceblue;">{{ titre }}</h1>
     <div class="row">
         {% for artiste in artistes %}
-        <div class="col-md-4">
-            <div class="card m-5" style="width:70%;">
-                <a href="/liste_albums?ArtistId={{artiste['ArtistId']}}">
+        <div class="col-md-3">
+            <div class="card m-3 text-center" style="width:70%;">
+                <a class="text-decoration-none" href="/liste_albums?ArtistId={{artiste[0]}}">
                     <img class="card-img-top" style="background-color:gray;" src="https://picsum.photos/200/200/?random={{loop.index%7}}" alt="Card image cap">
                     <div class="card-body">
-                        <p style="text-decoration: none;">{{artiste["Name"]}}</p>
+                        <p class="card-text text-dark fs-5 ">{{artiste[1]}}</p>
                     </div>
                 </a>
             </div>

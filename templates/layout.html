@@ -37,17 +37,31 @@
 
             <a class="navbar-brand" href="/accueil" style="width: 200px;"><img src="{{ url_for('static', filename='/images/logo.png') }}" style="width: 100%;"></a>
 
-            <div class="collapse navbar-collapse" id="navbarToggler1">
-                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li class="nav-item">
-                        <a class="mx-3 nav-link" href="artistes">Artistes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="mx-3 nav-link" href="contact">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="mx-3 nav-link" href="panier">Panier</a>
-                    </li>
+            <div class="collapse navbar-collapse " id="navbarToggler1">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0 d-flex justify-content-between" style="width: 100%">
+                    <ul class="d-flex justify-content-start">
+                        <li class="nav-item">
+                            <a class="mx-3 nav-link" href="artistes">Artistes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="mx-3 nav-link" href="playlists">Playlists</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="mx-3 nav-link" href="contact">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="mx-3 nav-link" href="panier">Panier</a>
+                        </li>
+                    </ul>
+                    <form class="form d-flex" action="{{ url_for('recherche') }}" method="GET">
+                        <input name="cherche" class="form-control mr-sm-2  flex-grow-1" type="search" placeholder="Chercher" aria-label="Search">
+                        <select class="form-select" aria-label="Select category" name="categorie">
+                            <option value="Artiste">Artiste</option>
+                            <option value="Titre">Titre</option>
+                            <option value="Album">Album</option>
+                        </select>
+                        <button type="submit" class="input-group-text btn-dark"><img src="{{ url_for('static', filename='/images/icon/search.svg') }}"></button>
+                    </form>
                 </ul>
             </div>
         </nav>

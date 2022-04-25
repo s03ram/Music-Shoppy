@@ -1,0 +1,35 @@
+<!--card layout : https://codepen.io/bekirhanbayar/pen/pxbqmm -->
+
+<!--add search form : https://www.blog.pythonlibrary.org/2017/12/13/flask-101-how-to-add-a-search-form/ -->
+
+{% extends 'layout.html' %}
+
+<!---->
+
+{% block contenu %}
+
+<section class="container mt-5">
+    <h1 class="text-center py-5" style="color: aliceblue;">Découvrez nos playlists</h1>
+</section>
+<section class="container">
+    <div class="row">
+        {% for playlist in playlists %}
+        <div class="card mb-3 text-white bg-dark" style="width: 30rem; margin: 3rem auto">
+            <a href="liste_titres?id={{playlist[0]['PlaylistId']}}&parent=playlist">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="https://picsum.photos/200/200/?random={{loop.index%7}}" class="img-fluid rounded-start" alt="Profile Picture" />
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h3 class="card-title text-white">{{ playlist[0]['Name'] }}</h3>
+                            <p class="card-text text-white">{{ playlist[1][0] }} titres</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

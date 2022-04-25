@@ -1,8 +1,8 @@
-from crypt import methods
-from multiprocessing import AuthenticationError
 from flask import Flask, render_template, request, g, session
 import sqlite3
 from datetime import datetime
+
+from recherche_patern import boyer_moore_horspool #petite fonction de recherche textuelle implémentée en cours
 from config import Config
 from flask_mail import Mail, Message
 from random import randint
@@ -60,11 +60,13 @@ def selection(requete, args=(), one=False):
 
 ####################\  Base de données  /#####################
 ##############################################################
+
 ##############################################################
 #######################/  Templates  \########################
 
 
-
+# Les sélections des requêtes SQLite seront converties en liste
+# pour faciliter l'implémentation de la fonction recherche.
 
 # accueil
 @app.route('/')
@@ -75,16 +77,58 @@ def accueil():
     SELECT * FROM artists
     WHERE artists.ArtistId = ?
     """
-    nbArtistes = selection(requete_nbArtists, one=True)[0]
+    nbArtistes = selection(requete_nbArtists, one=True)[0]  #nombre total d'artistes de la db pour le randint()
+                                                            # en espérant qu'il n'y ait pas de trous dans les artistsId
     artistes = []
-    for i in range (6):
+    for i in range (6):  #selectionne 6 artistes au hasard pour la section #hightlighted
         artistes.append(selection(requete_artistById, (randint(1,nbArtistes),), one=True))
-    print(artistes[0]['Name'])
-    if 'panier' not in session :
+
+    # Créé un panier vide s'il y en a pas déjà (répété sur toutes les pages au cas où le visiteur ne passe pas par l'accueil)
+    if 'panier' not in session : 
+            session['panier'] = []      # ensemble des articles en attente de commande
+            session['panierPrice'] = 0  # prix total du panier
+
+    return render_template('index.html', artistes = artistes)
+
+#recherche d'un artiste
+@app.route('/recherche')
+def recherche():
+    cherche = request.args.get('cherche')
+    categorie = request.args.get('categorie')
+
+    #modifie la requête en fonction de la catégorie
+    if categorie == "Artiste":
+        requete ="SELECT *, upper(Name) AS 'Upper' FROM artists"
+    if categorie == "Titre":
+        requete ="SELECT *, upper(Name) AS 'Upper' FROM tracks"
+    else:
+        requete ="SELECT *, upper(Title) AS 'Upper' FROM albums"
+
+    select = selection(requete)
+
+    #recherche textuelle avec algo de Boyer-Hoore et Horspool
+    resultats = []
+    for unit in select:
+        if boyer_moore_horspool(unit["Upper"], cherche.upper()):
+            resultats.append(unit)
+    
+    if 'panier' not in session : 
             session['panier'] = []
             session['panierPrice'] = 0
 
-    return render_template('index.html', artistes = artistes)
+    enTete= str(len(resultats))+' résulats pour "'+cherche+'"'
+    # en fonction de la catégorie, renvoyer un template différent
+    if categorie == "Artiste":
+        return render_template('artistes.html', artistes=resultats, titre = enTete)
+    elif categorie == "Titre":
+        return render_template("liste_titres.html",
+                                titres = resultats,
+                                title = enTete)
+    else:
+        return render_template('liste_albums.html', 
+                                albums=resultats,
+                                titre = enTete)
+                                
 
 
 #contact
@@ -106,18 +150,20 @@ def liste_artistes():
     ORDER BY artists.name ASC
     """
     artistes = selection(requete)
-    
+
+    #pour simpifier l'implémentation de la fonction recherche, on renvoie la requête sous forme de liste
+    resultats =[artiste for artiste in artistes]
+
     if 'panier' not in session :
             session['panier'] = []
             session['panierPrice'] = 0
  
-    return render_template("artistes.html", artistes=artistes)
+    return render_template("artistes.html", artistes=resultats, titre = "Tous les artistes")
 
 
 # albums de l'artiste sélectionné
 @app.route("/liste_albums")
 def liste_albums():
-    # à améliorer -> simplifiable niveau requêtes
     artiste = request.args.get('ArtistId')
     requete_listAlbums = """
     SELECT * FROM albums
@@ -130,49 +176,95 @@ def liste_albums():
     albums = selection(requete_listAlbums, (artiste,))
     artist = selection(requete_artist, (artiste,), one=True)
 
+    #pour simpifier l'implémentation de la fonction recherche, on renvoie la requête sous forme de liste
+    resultats = [album for album in albums]
+
     if 'panier' not in session :
             session['panier'] = []
             session['panierPrice'] = 0
 
     return render_template("liste_albums.html",
-                           artist=artist,
-                           albums=albums,)
+                           titre="Albums de "+artist[1],
+                           albums=resultats)
 
 
 # liste des titres de l'album sélectionné
 @app.route("/liste_titres")
 def liste_titres():
-    idAlbum = request.args.get('AlbumId')
-    requete_album = """
+
+    idGet = request.args.get('id')
+    parent = request.args.get('parent')
+
+    requete_parentAlbum = """
     SELECT Title FROM albums
     WHERE albums.AlbumId = ?
     """
-    requete_listTitles = """
+    requete_parentPlaylist = """
+    SELECT Name FROM playlists
+    WHERE playlists.PlaylistId = ?
+    """
+    requete_listTracksFromAlbum = """
     SELECT * FROM tracks
     WHERE tracks.AlbumId = ?
     """
-    album = selection(requete_album, (idAlbum,), one=True)
-    titres = selection(requete_listTitles, (idAlbum,))
+    requete_listTracksFromPlaylist = """
+    SELECT * FROM tracks
+    INNER JOIN playlist_track ON playlist_track.TrackId = tracks.TrackId
+    INNER JOIN playlists ON playlist_track.PlaylistId = playlists.PlaylistId
+    WHERE playlists.PlaylistId = ?
+    """
+    print(idGet)
+    if parent == 'album':
+        title = selection(requete_parentAlbum, (idGet,), one=True)['Title']
+        titres = selection(requete_listTracksFromAlbum, (idGet[0],))
+    else:
+        title= selection(requete_parentPlaylist, (idGet,), one=True)['Name']
+        titres = selection(requete_listTracksFromPlaylist, (idGet,))
+
+    resultats = [titre for titre in titres]
+
+    if 'panier' not in session :
+            session['panier'] = []
+            session['panierPrice'] = 0
+    
+    return render_template("liste_titres.html",
+                                title = title,
+                                titres = resultats)
+
+
+# playlists
+@app.route('/playlists')
+def playlists():
+    requete_playlists = """
+    SELECT * FROM playlists
+    """
+    requete_nbTitresPlaylists="""
+    SELECT count(tracks.TrackId) FROM tracks
+    INNER JOIN playlist_track ON playlist_track.TrackId = tracks.TrackId
+    INNER JOIN playlists ON playlist_track.PlaylistId = playlists.PlaylistId
+    WHERE playlists.PlaylistId = ?
+    """
+    playlists = selection(requete_playlists)
+
+    resultats = [(playlist,selection(requete_nbTitresPlaylists,(playlist['PlaylistId'],), one=True)) for playlist in playlists]
 
     if 'panier' not in session :
             session['panier'] = []
             session['panierPrice'] = 0
 
-    return render_template("liste_titres.html",
-                            album = album,
-                            titres = titres)
-
+    return render_template("playlists.html", playlists = resultats)
 
 # récapitulatif de panier
 @app.route('/panier', methods = ['post','get'])
 def panier():
+    # on essaie de récupérer les titres par 'POST'
     try:
         tracks = request.form
-    except :
+    except : # si on y arrive pas (erreur) c'est qu'on est arrivé là sans passer par liste_titres (sans ajouter au panier)
         if 'panier' not in session :
             session['panier'] = []
             session['panierPrice'] = 0
-    else:
+    else: # sinon c'est qu'on veut ajouter au panier
         noms = [nom for nom in tracks]
         prix = [float(tracks[n]) for n in noms]
         session['panierPrice'] += float(sum(prix))

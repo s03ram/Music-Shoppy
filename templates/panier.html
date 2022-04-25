@@ -30,24 +30,31 @@
                         </ul>
                         <div class="mt-4 d-flex justify-content-between">
                             <div>
+                                <a class="btn btn-dark btn-rounded mb-1" href="/">Continuer les achats</a>
+                                <!---->
+                                {% if session['panier']|count != 0 %}
                                 <form name="supprimer_panier" class="d-flex flex-row" action="{{ url_for('vider_panier') }}" method="get">
-                                    <input class="btn btn-outline-dark btn-rounded" type="submit" value="Vider le panier"></form>
+                                    <input class="btn btn-outline-dark btn-rounded" type="submit" value="Vider le panier">
+                                </form>
+                                {% endif %}
                             </div>
+                            {% if session['panier']|count != 0 %}
                             <div>
                                 <div>
                                     <form name="moyen_de_paiement" class="d-flex flex-row" action="{{ url_for('paiement') }}" method="post">
                                         <select class="form-select" aria-label="Default select example" name="fname">
-                                        <option value="1">Visa</option>
-                                        <option value="2">PayPal</option>
-                                        <option value="3">BitCoin</option>
-                                    </select>
-                                        <input class="btn btn-outline-dark btn-rounded" type="submit" value="Confirmer la commande">
+                                            <option value="1">Visa</option>
+                                            <option value="2">PayPal</option>
+                                            <option value="3">BitCoin</option>
+                                        </select>
+                                        <input class="btn btn-dark btn-rounded" type="submit" value="Confirmer la commande">
                                     </form>
                                 </div>
                                 <div>
                                     <p style="color:black; font-size:large;">Total : {{ session['panierPrice']|round(2) }} USD</p>
                                 </div>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
